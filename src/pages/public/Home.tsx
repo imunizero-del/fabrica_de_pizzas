@@ -95,6 +95,60 @@ export default function Home() {
         </div>
       </section>
 
+      {/* NOSSA PRODUÇÃO */}
+      <section className="py-24 bg-primary/5">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="order-2 lg:order-1 relative">
+              <div className="absolute inset-0 bg-primary/10 -rotate-3 rounded-[2.5rem]"></div>
+              <img 
+                src="/images/producao.jpg" 
+                alt="Produção artesanal de mini pizzas" 
+                className="relative rounded-3xl shadow-xl border-4 border-background w-full h-auto object-cover max-h-[600px]"
+              />
+              <div className="absolute -bottom-6 -right-6 bg-background p-4 rounded-2xl shadow-lg border border-border flex items-center gap-4">
+                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold text-xl">
+                  100%
+                </div>
+                <div>
+                  <p className="font-bold text-foreground leading-tight">Massa Artesanal</p>
+                  <p className="text-xs text-muted-foreground">Feita todos os dias</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="order-1 lg:order-2 space-y-6">
+              <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground">
+                Qualidade artesanal em cada detalhe
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                Nossas mini pizzas são preparadas com muito carinho, utilizando ingredientes rigorosamente selecionados e massa fresca aberta diariamente pelo nosso pizzaiolo.
+              </p>
+              <ul className="space-y-4">
+                {[
+                  'Molho de tomate especial',
+                  'Ingredientes de primeira linha',
+                  'Assamento no ponto perfeito',
+                  'Amor e dedicação na receita'
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                      <Star className="w-4 h-4" />
+                    </div>
+                    <span className="font-medium">{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="pt-4">
+                <Button size="lg" className="rounded-full shadow-lg h-14 px-8 text-base" onClick={() => document.getElementById('combos')?.scrollIntoView({ behavior: 'smooth' })}>
+                  Quero experimentar
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ */}
       <section id="faq" className="py-24 bg-muted/30">
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
