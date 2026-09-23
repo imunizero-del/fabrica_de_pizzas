@@ -36,11 +36,12 @@ export default function Home() {
             </div>
             
             <div className="flex-1 relative w-full max-w-md mx-auto">
-              <div className="aspect-square bg-muted rounded-full overflow-hidden relative shadow-2xl border-4 border-white/50 backdrop-blur-sm">
-                {/* Placeholder para foto principal. Como exigido, espaço de destaque. */}
-                <div className="absolute inset-0 bg-primary/5 flex items-center justify-center">
-                  <span className="text-muted-foreground text-sm">[Fotografia Alta Qualidade]</span>
-                </div>
+              <div className="aspect-square bg-muted rounded-full overflow-hidden relative shadow-2xl border-4 border-white/50 backdrop-blur-sm group">
+                <img 
+                  src="/images/11.jpeg" 
+                  alt="Mini pizzas premium" 
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                />
               </div>
               {/* Decorative elements */}
               <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-primary/5 rounded-full blur-3xl"></div>
