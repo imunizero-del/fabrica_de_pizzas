@@ -7,8 +7,8 @@ export default function Footer() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           <div className="col-span-1 md:col-span-2">
-            <div className="h-16 w-32 bg-white rounded-lg p-2 mb-6 flex items-center justify-center">
-              <img src="/Logo.jpg" alt="Fábrica de Pizzas" className="h-full object-contain mix-blend-multiply" />
+            <div className="h-20 w-36 bg-white rounded-xl p-2 mb-6 flex items-center justify-center">
+              <img src="/logo.jpg" alt="Fábrica de Pizzas" className="h-full w-auto object-contain mix-blend-multiply" />
             </div>
             <p className="text-background/70 mb-6 max-w-sm">
               Combos de mini pizzas pré-assadas artesanais, preparadas com ingredientes selecionados para transformar o seu evento.

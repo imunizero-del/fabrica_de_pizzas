@@ -23,11 +23,8 @@ export default function Header() {
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 relative z-50">
-          {/* Logo oficial preservada na pasta raiz */}
-          <div className="h-10 w-auto rounded-md overflow-hidden bg-white/50 backdrop-blur-sm p-1">
-            <img src="/Logo.jpg" alt="Fábrica de Pizzas" className="h-full w-auto object-contain mix-blend-multiply" />
-          </div>
+        <Link to="/" className="flex items-center gap-2">
+          <img src="/logo.jpg" alt="Fábrica de Pizzas" className="h-12 md:h-14 w-auto object-contain" />
         </Link>
 
         {/* Desktop Navigation */}

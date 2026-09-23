@@ -23,8 +23,8 @@ export default function AdminLayout() {
     <div className="flex h-screen bg-muted/20">
       {/* Sidebar */}
       <aside className="w-64 bg-foreground text-background flex flex-col">
-        <div className="h-16 flex items-center px-6 border-b border-background/10">
-          <span className="font-bold text-lg tracking-wide">FÁBRICA DE PIZZAS</span>
+        <div className="h-20 flex items-center px-6 border-b border-background/10 py-3">
+          <img src="/logo.jpg" alt="Fábrica de Pizzas" className="h-full w-auto object-contain bg-white rounded-lg p-1.5" />
         </div>
         
         <nav className="flex-1 py-6 px-4 space-y-1">
