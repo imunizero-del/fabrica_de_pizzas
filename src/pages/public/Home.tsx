@@ -16,7 +16,7 @@ export default function Home() {
                 Artesanal & Premium
               </div>
               <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground leading-tight">
-                Mini pizzas prontas para <span className="text-primary">transformar</span> qualquer momento.
+                Mini pizzas prontas para <span className="text-secondary">transformar</span> qualquer momento.
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto md:mx-0">
                 Escolha seu combo, agende o melhor dia e horário e tenha suas mini pizzas pré-assadas preparadas especialmente para você.
