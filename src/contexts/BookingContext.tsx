@@ -8,6 +8,7 @@ export type Combo = {
   pizza_quantity: number;
   price: number;
   promotional_price: number | null;
+  badge: string | null;
   image_url: string | null;
 };
 
@@ -20,8 +21,10 @@ export type TimeSlot = {
   id: string;
   date_id: string;
   schedule_time: string;
+  capacity_mode: 'orders' | 'units';
   capacity_limit: number;
   reserved_capacity: number;
+  is_active?: boolean;
 };
 
 interface BookingState {

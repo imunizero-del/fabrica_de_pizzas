@@ -34,6 +34,7 @@
 
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-fade-in: fade-in 0.4s ease-out;
 
   @keyframes accordion-down {
     from { height: 0; }
@@ -42,6 +43,10 @@
   @keyframes accordion-up {
     from { height: var(--radix-accordion-content-height); }
     to { height: 0; }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }
 
@@ -58,58 +63,61 @@
 
 @layer base {
   :root {
-    --background: 40 33% 98%;
-    --foreground: 20 14% 16%;
+    --background: 38 30% 98%;
+    --foreground: 20 30% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 20 14% 16%;
+    --card-foreground: 20 30% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 20 14% 16%;
+    --popover-foreground: 20 30% 12%;
     
-    /* Verde da logo (Pizzas) */
-    --primary: 141 80% 20%;
+    /* 🟢 Verde da logo — "Pizzas" */
+    --primary: 133 72% 22%;
     --primary-foreground: 0 0% 100%;
     
-    /* Vermelho da logo (Fábrica de) */
-    --secondary: 358 74% 48%;
+    /* 🔴 Vermelho da logo — "FÁBRICA DE" */
+    --secondary: 0 66% 44%;
     --secondary-foreground: 0 0% 100%;
     
-    /* Laranja/Dourado da borda da logo */
-    --accent: 38 89% 52%;
-    --accent-foreground: 141 80% 20%;
+    /* 🟡 Dourado/Âmbar da borda da logo */
+    --accent: 38 90% 50%;
+    --accent-foreground: 20 30% 12%;
+
+    /* 🟫 Marrom/Tijolo — fundo rústico externo */
+    --brand-brick: 18 64% 29%;
+
+    --muted: 38 25% 92%;
+    --muted-foreground: 20 15% 42%;
     
-    --muted: 40 20% 92%;
-    --muted-foreground: 20 10% 40%;
-    
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 40 20% 85%;
-    --input: 40 20% 85%;
-    --ring: 141 80% 20%;
+    --border: 38 20% 84%;
+    --input: 38 20% 84%;
+    --ring: 133 72% 22%;
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 20 14% 12%;
-    --foreground: 40 33% 98%;
-    --card: 20 14% 14%;
-    --card-foreground: 40 33% 98%;
-    --popover: 20 14% 14%;
-    --popover-foreground: 40 33% 98%;
+    --background: 20 18% 10%;
+    --foreground: 38 30% 95%;
+    --card: 20 18% 13%;
+    --card-foreground: 38 30% 95%;
+    --popover: 20 18% 13%;
+    --popover-foreground: 38 30% 95%;
     
-    --primary: 141 80% 20%;
+    --primary: 133 65% 32%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 358 74% 48%;
+    --secondary: 0 60% 52%;
     --secondary-foreground: 0 0% 100%;
-    --accent: 38 89% 52%;
-    --accent-foreground: 141 80% 20%;
+    --accent: 38 90% 54%;
+    --accent-foreground: 20 30% 12%;
     
     --muted: 20 14% 18%;
-    --muted-foreground: 40 10% 60%;
-    --destructive: 0 62.8% 30.6%;
+    --muted-foreground: 38 10% 58%;
+    --destructive: 0 62% 38%;
     --destructive-foreground: 0 0% 98%;
     --border: 20 14% 22%;
     --input: 20 14% 22%;
-    --ring: 141 80% 20%;
+    --ring: 133 65% 32%;
   }
 }
 
@@ -121,4 +129,15 @@
     @apply bg-background text-foreground;
     font-family: 'Inter', sans-serif;
   }
+}
+
+/* Utility classes para as cores da marca */
+@layer utilities {
+  .text-brand-red    { color: hsl(var(--secondary)); }
+  .text-brand-green  { color: hsl(var(--primary)); }
+  .text-brand-gold   { color: hsl(var(--accent)); }
+  .bg-brand-red      { background-color: hsl(var(--secondary)); }
+  .bg-brand-green    { background-color: hsl(var(--primary)); }
+  .bg-brand-gold     { background-color: hsl(var(--accent)); }
+  .border-brand-gold { border-color: hsl(var(--accent)); }
 }

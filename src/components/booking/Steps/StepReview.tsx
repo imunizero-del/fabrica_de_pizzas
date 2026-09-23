@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useBooking } from '@/contexts/BookingContext';
 import { Button } from '@/components/ui/button';
 import { Pizza, Calendar, User, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 export default function StepReview({ onNext, onPrev, onEdit }: { onNext: () => void, onPrev: () => void, onEdit: (step: number) => void }) {
   const { state, setOrderResult, totalPrice } = useBooking();
@@ -23,39 +24,51 @@ export default function StepReview({ onNext, onPrev, onEdit }: { onNext: () => v
     setError('');
 
     try {
-      // TODO: Conectar com a RPC create_booking no Supabase
-      // Exemplo de payload a ser enviado:
-      /*
-        const { data, error } = await supabase.rpc('create_booking', {
-          p_idempotency_key: crypto.randomUUID(),
-          p_customer_name: state.customer.name,
-          p_customer_whatsapp: state.customer.whatsapp,
-          p_customer_notes: state.customer.notes,
-          p_time_slot_id: state.timeSlot?.id,
-          p_combo_id: state.combo?.id,
-          p_quantity: state.quantity
-        });
-      */
-      
-      // MOCK do sucesso
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Simulando falha de concorrência aleatória para testar tratamento (10% de chance no mock)
-      if (Math.random() > 0.9) {
-        throw new Error('INSUFFICIENT_CAPACITY');
+      const idempotencyKey = crypto.randomUUID();
+
+      const { data, error: rpcError } = await supabase.rpc('create_booking', {
+        p_idempotency_key: idempotencyKey,
+        p_customer_name: state.customer.name,
+        p_customer_whatsapp: state.customer.whatsapp,
+        p_customer_notes: state.customer.notes || '',
+        p_time_slot_id: state.timeSlot?.id,
+        p_combo_id: state.combo?.id,
+        p_quantity: state.quantity,
+      });
+
+      if (rpcError) {
+        // Erro de rede ou banco
+        throw new Error(rpcError.message);
+      }
+
+      // A RPC retorna um JSON com success: true/false
+      const result = data as { success: boolean; error?: string; order_id?: string; order_number?: string };
+
+      if (!result.success) {
+        throw new Error(result.error || 'UNKNOWN_ERROR');
       }
 
       setOrderResult({
-        id: 'mock-uuid',
-        order_number: `FP-${new Date().toISOString().slice(2,10).replace(/-/g,'')}-${Math.floor(Math.random()*9000)+1000}`
+        id: result.order_id!,
+        order_number: result.order_number!,
       });
       onNext();
-      
+
     } catch (err: any) {
-      if (err.message === 'INSUFFICIENT_CAPACITY') {
-        setError('Infelizmente as vagas para este horário acabaram de esgotar. Por favor, escolha outro horário.');
+      const msg: string = err.message || '';
+
+      if (msg.includes('INSUFFICIENT_CAPACITY')) {
+        setError('Infelizmente as vagas para este horário acabaram de esgotar. Por favor, volte e escolha outro horário.');
+      } else if (msg.includes('TIME_SLOT_INACTIVE')) {
+        setError('Este horário não está mais disponível. Por favor, escolha outro.');
+      } else if (msg.includes('DATE_NOT_AVAILABLE')) {
+        setError('Esta data foi fechada. Por favor, volte e escolha outra data.');
+      } else if (msg.includes('COMBO_NOT_AVAILABLE')) {
+        setError('Este combo não está mais disponível. Por favor, escolha outro.');
+      } else if (msg.includes('DUPLICATE_ORDER')) {
+        setError('Este pedido já foi processado anteriormente. Verifique seu WhatsApp.');
       } else {
-        setError('Ocorreu um erro ao processar seu pedido. Tente novamente.');
+        setError('Ocorreu um erro ao processar seu pedido. Por favor, tente novamente.');
       }
     } finally {
       setLoading(false);
@@ -80,7 +93,9 @@ export default function StepReview({ onNext, onPrev, onEdit }: { onNext: () => v
             </div>
             <div>
               <p className="font-semibold text-foreground">{state.combo.name}</p>
-              <p className="text-sm text-muted-foreground">Quantidade: {state.quantity}x ({state.combo.pizza_quantity * state.quantity} mini pizzas)</p>
+              <p className="text-sm text-muted-foreground">
+                Quantidade: {state.quantity}x ({state.combo.pizza_quantity * state.quantity} mini pizzas)
+              </p>
             </div>
           </div>
           <button onClick={() => onEdit(1)} className="text-xs font-medium text-primary hover:underline">Editar</button>
@@ -94,7 +109,9 @@ export default function StepReview({ onNext, onPrev, onEdit }: { onNext: () => v
             </div>
             <div>
               <p className="font-semibold text-foreground">Agendado para</p>
-              <p className="text-sm text-muted-foreground">{formatDate(state.date.schedule_date)} às {formatTime(state.timeSlot.schedule_time)}</p>
+              <p className="text-sm text-muted-foreground">
+                {formatDate(state.date.schedule_date)} às {formatTime(state.timeSlot.schedule_time)}
+              </p>
             </div>
           </div>
           <button onClick={() => onEdit(2)} className="text-xs font-medium text-primary hover:underline">Editar</button>
@@ -134,12 +151,17 @@ export default function StepReview({ onNext, onPrev, onEdit }: { onNext: () => v
 
       <div className="pt-6 mt-6 border-t border-border flex flex-col-reverse sm:flex-row items-center justify-between gap-4">
         <Button variant="ghost" onClick={onPrev} className="w-full sm:w-auto" disabled={loading}>Voltar</Button>
-        <Button size="lg" className="w-full sm:w-auto px-10 rounded-full font-bold relative overflow-hidden" onClick={handleConfirm} disabled={loading}>
+        <Button
+          size="lg"
+          className="w-full sm:w-auto px-10 rounded-full font-bold relative overflow-hidden"
+          onClick={handleConfirm}
+          disabled={loading}
+        >
           {loading ? (
-             <span className="flex items-center gap-2">
-                <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></span>
-                Processando reserva...
-             </span>
+            <span className="flex items-center gap-2">
+              <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></span>
+              Processando reserva...
+            </span>
           ) : (
             <span className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5" /> Confirmar Agendamento

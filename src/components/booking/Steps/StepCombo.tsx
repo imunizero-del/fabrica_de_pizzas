@@ -1,40 +1,34 @@
 import { useState, useEffect } from 'react';
 import { useBooking, type Combo } from '@/contexts/BookingContext';
 import { Button } from '@/components/ui/button';
-
-// Mock temporário para simular fetch do DB
-const mockCombos: Combo[] = [
-  {
-    id: 'c1',
-    name: 'Combo 30 Unidades',
-    description: 'Ideal para pequenas reuniões. Acompanha 2 sabores à sua escolha.',
-    pizza_quantity: 30,
-    price: 59.90,
-    promotional_price: null,
-    image_url: '/images/05.jpeg',
-  },
-  {
-    id: 'c2',
-    name: 'Combo 50 Unidades',
-    description: 'A opção mais pedida. Serve muito bem até 8 pessoas com 3 sabores.',
-    pizza_quantity: 50,
-    price: 99.90,
-    promotional_price: 89.90,
-    image_url: '/images/06.jpeg',
-  }
-];
+import { supabase } from '@/lib/supabase';
+import { AlertCircle } from 'lucide-react';
 
 export default function StepCombo({ onNext }: { onNext: () => void }) {
   const { state, setCombo, setQuantity } = useBooking();
   const [combos, setCombos] = useState<Combo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    // TODO: Fetch from Supabase
-    setTimeout(() => {
-      setCombos(mockCombos);
+    const fetchCombos = async () => {
+      setLoading(true);
+      setError('');
+      const { data, error: err } = await supabase
+        .from('combos')
+        .select('*')
+        .eq('is_active', true)
+        .order('display_order', { ascending: true });
+
+      if (err) {
+        setError('Não foi possível carregar os combos. Tente novamente.');
+      } else {
+        setCombos(data as Combo[]);
+      }
       setLoading(false);
-    }, 500);
+    };
+
+    fetchCombos();
   }, []);
 
   const handleSelect = (c: Combo) => {
@@ -57,15 +51,20 @@ export default function StepCombo({ onNext }: { onNext: () => void }) {
       {loading ? (
         <div className="space-y-4">
           {[1, 2].map(i => (
-            <div key={i} className="h-32 rounded-xl bg-muted animate-pulse"></div>
+            <div key={i} className="h-36 rounded-xl bg-muted animate-pulse"></div>
           ))}
+        </div>
+      ) : error ? (
+        <div className="p-4 rounded-xl bg-destructive/10 text-destructive text-sm font-medium border border-destructive/20 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+          <p>{error}</p>
         </div>
       ) : (
         <div className="space-y-4">
           {combos.map(combo => {
             const isSelected = state.combo?.id === combo.id;
             return (
-              <div 
+              <div
                 key={combo.id}
                 onClick={() => handleSelect(combo)}
                 className={`flex flex-col sm:flex-row gap-4 p-4 rounded-2xl cursor-pointer border-2 transition-all duration-200 ${
@@ -74,9 +73,14 @@ export default function StepCombo({ onNext }: { onNext: () => void }) {
               >
                 <div className="w-full sm:w-32 h-32 bg-muted rounded-xl flex-shrink-0 flex items-center justify-center overflow-hidden relative">
                   {combo.image_url ? (
-                     <img src={combo.image_url} alt={combo.name} className="w-full h-full object-cover" />
+                    <img src={combo.image_url} alt={combo.name} className="w-full h-full object-cover" />
                   ) : (
-                    <span className="text-xs text-muted-foreground">[Imagem]</span>
+                    <span className="text-3xl">🍕</span>
+                  )}
+                  {combo.badge && (
+                    <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-wide shadow">
+                      {combo.badge}
+                    </span>
                   )}
                 </div>
                 <div className="flex-1 flex flex-col justify-between">
@@ -86,15 +90,16 @@ export default function StepCombo({ onNext }: { onNext: () => void }) {
                       <div className="text-right">
                         {combo.promotional_price && (
                           <div className="text-sm line-through text-muted-foreground">
-                            R$ {combo.price.toFixed(2).replace('.',',')}
+                            R$ {combo.price.toFixed(2).replace('.', ',')}
                           </div>
                         )}
                         <div className="font-bold text-primary text-lg">
-                          R$ {(combo.promotional_price || combo.price).toFixed(2).replace('.',',')}
+                          R$ {(combo.promotional_price || combo.price).toFixed(2).replace('.', ',')}
                         </div>
                       </div>
                     </div>
                     <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{combo.description}</p>
+                    <p className="text-xs text-muted-foreground mt-2 font-medium">{combo.pizza_quantity} mini pizzas por combo</p>
                   </div>
                 </div>
               </div>
@@ -108,12 +113,12 @@ export default function StepCombo({ onNext }: { onNext: () => void }) {
           <div className="flex items-center gap-4">
             <span className="font-medium">Quantidade:</span>
             <div className="flex items-center bg-muted rounded-full p-1">
-              <button 
+              <button
                 onClick={() => setQuantity(Math.max(1, state.quantity - 1))}
                 className="w-8 h-8 rounded-full bg-background flex items-center justify-center font-medium shadow-sm"
               >-</button>
               <span className="w-10 text-center font-semibold">{state.quantity}</span>
-              <button 
+              <button
                 onClick={() => setQuantity(state.quantity + 1)}
                 className="w-8 h-8 rounded-full bg-background flex items-center justify-center font-medium shadow-sm"
               >+</button>
