@@ -101,12 +101,13 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="order-2 lg:order-1 relative">
               <div className="absolute inset-0 bg-primary/10 -rotate-3 rounded-[2.5rem]"></div>
-              <img 
-                src="/images/producao.jpg" 
-                alt="Produção artesanal de mini pizzas" 
-                className="relative rounded-3xl shadow-xl border-4 border-background w-full h-auto object-cover max-h-[600px]"
-              />
-              <div className="absolute -bottom-6 -right-6 bg-background p-4 rounded-2xl shadow-lg border border-border flex items-center gap-4">
+              <div className="relative grid grid-cols-2 gap-3 md:gap-4 rounded-3xl bg-background p-2 md:p-3 shadow-xl">
+                <img src="/images/01.jpeg" alt="Preparo artesanal 1" className="rounded-2xl w-full h-40 md:h-56 object-cover" />
+                <img src="/images/02.jpeg" alt="Preparo artesanal 2" className="rounded-2xl w-full h-40 md:h-56 object-cover translate-y-6 md:translate-y-8" />
+                <img src="/images/03.jpeg" alt="Preparo artesanal 3" className="rounded-2xl w-full h-40 md:h-56 object-cover" />
+                <img src="/images/04.jpeg" alt="Preparo artesanal 4" className="rounded-2xl w-full h-40 md:h-56 object-cover translate-y-6 md:translate-y-8" />
+              </div>
+              <div className="absolute -bottom-2 md:-bottom-6 -left-4 md:-left-6 bg-background p-3 md:p-4 rounded-2xl shadow-lg border border-border flex items-center gap-3 md:gap-4 z-10">
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold text-xl">
                   100%
                 </div>

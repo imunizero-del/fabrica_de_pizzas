@@ -11,7 +11,7 @@ const mockCombos: Combo[] = [
     pizza_quantity: 30,
     price: 59.90,
     promotional_price: null,
-    image_url: null,
+    image_url: '/images/05.jpeg',
   },
   {
     id: 'c2',
@@ -20,7 +20,7 @@ const mockCombos: Combo[] = [
     pizza_quantity: 50,
     price: 99.90,
     promotional_price: 89.90,
-    image_url: null,
+    image_url: '/images/06.jpeg',
   }
 ];
 
